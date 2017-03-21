@@ -1,13 +1,13 @@
 library(RMySQL)
 library(jiebaR)
-mycon <- dbConnect(MySQL(),dbname="decision",username ="chenggang",password="*Cheng2017",host = "10.139.101.142",port =3306)
+mycon <- dbConnect(MySQL(),dbname="decision",username ="chenggang",password="*******8",host = "********",port =3306)
 dbSendQuery(mycon,"SET NAMES gbk")  #==="set names utf8" not work 
 dbGetQuery(mycon, "SELECT * FROM Invalid_Chat_Record limit 0,3")  
-dbGetQuery(mycon,"select FROM_UNIXTIME(addtime,'%YÄê%mÔÂ%d ') as addtime  from Invalid_Chat_Record")
+dbGetQuery(mycon,"select FROM_UNIXTIME(addtime,'%Yå¹´%mæœˆ%d ') as addtime  from Invalid_Chat_Record")
 chat <- dbGetQuery(mycon, "select message_content,addtime from Invalid_Chat_Record limit 0,2208765;")  # load data,2.2 million take 45s
 dim(chat);tail(chat,10);class(chat)
 #==============================================================
-index <- grep("Äú×ÉÑ¯", chat$message_content)-1
+index <- grep("æ‚¨å’¨è¯¢", chat$message_content)-1
 index[1:10]
 length(index)#344967
 trigger_Invalid <- as.data.frame(chat[index,],stringsAsFactors = F)
@@ -27,24 +27,24 @@ dele_two_word <- function(data){
 dele_invalid_word <- function(data,word) {
      index <- grep(word, data[,1])
      if(length(index) ==0){
-       print("Õâ¸ö´ÊÓïÒÑ±»É¾³ý")
+       print("è¿™ä¸ªè¯è¯­å·²è¢«åˆ é™¤")
      }else{
      trigger_Invalid <<- as.data.frame(data[-index,],stringsAsFactors = F)
      n <- length(trigger_Invalid[,1])
-     print(paste("ÒÑÉ¾³ý£¬É¾³ýºóÊý¾ÝÁ¿Îª:",n))
+     print(paste("å·²åˆ é™¤ï¼Œåˆ é™¤åŽæ•°æ®é‡ä¸º:",n))
      }
      }
 Test_data <- function(data,word){
   index <- grep(word, data[,1])
   if(length(index) == 0){
-    print("²»°üº¬Õâ¸öµ¥´Ê!")
+    print("ä¸åŒ…å«è¿™ä¸ªå•è¯!")
   }
   else{
-    w <- "°üº¬Õâ¸ö´ÊÓï,ÇÒÊý¾ÝÁ¿Îª£º"
+    w <- "åŒ…å«è¿™ä¸ªè¯è¯­,ä¸”æ•°æ®é‡ä¸ºï¼š"
     print(paste(w,length(index)))
   }
   n <- length(data[,1])
-  print(paste("Êý¾Ý×ÜÁ¿Îª:",n))
+  print(paste("æ•°æ®æ€»é‡ä¸º:",n))
 }
 #================================================================================
 dele_one_word(trigger_Invalid)#delete one word
@@ -52,8 +52,8 @@ head(trigger_Invalid)
 class(trigger_Invalid);dim(trigger_Invalid)
 
 #=============================================delete invalid word ===============
-dele_invalid_word(trigger_Invalid,"ÂíÉÏÎªÄú×ª½Ó")
-Test_data(trigger_Invalid,"ÂíÉÏÎªÄú×ª½Ó")
+dele_invalid_word(trigger_Invalid,"é©¬ä¸Šä¸ºæ‚¨è½¬æŽ¥")
+Test_data(trigger_Invalid,"é©¬ä¸Šä¸ºæ‚¨è½¬æŽ¥")
 
 dele_invalid_word(trigger_Invalid,"1.")
 Test_data(trigger_Invalid,"1.")
@@ -75,7 +75,7 @@ removewords <- function(target_words,stop_words){
   return(target_words)
 }
 
-stop <- c("ÊÇ","Ã´")
+stop <- c("æ˜¯","ä¹ˆ")
 stopwords <- as.data.frame(stop)
 stopwords
 segwords2 <- sapply(segwords, removewords, stopwords)
